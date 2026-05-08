@@ -3,7 +3,6 @@
 <head>
     <title>CARITAS HALL BOOKING</title>
 
-    <!-- FullCalendar -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
@@ -13,13 +12,12 @@
             background: #007bff;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* 🚫 prevent scroll */
+            overflow: hidden;
         }
 
-        h2, h3 {
+        h2 {
             text-align: center;
-            color: #2c3e50;
-            margin: 10px 0;
+            color: white;
         }
 
         .container {
@@ -27,14 +25,12 @@
             margin: auto;
         }
 
-        /* 🔥 MAIN LAYOUT */
         .main-layout {
             display: flex;
             gap: 20px;
             height: 85vh;
         }
 
-        /* LEFT PANEL */
         .left-panel {
             width: 350px;
             display: flex;
@@ -42,19 +38,15 @@
             gap: 15px;
         }
 
-        /* RIGHT PANEL */
         .right-panel {
             flex: 1;
             display: flex;
-            flex-direction: column;
         }
 
-        /* FORM CARD */
         .card {
             background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
 
         .row {
@@ -76,74 +68,112 @@
             padding: 10px;
             border: none;
             border-radius: 8px;
-            background: linear-gradient(135deg, rgb(61, 61, 210), #0056d2);
+            background: linear-gradient(135deg, rgb(61,61,210), #0056d2);
             color: white;
-            font-weight: bold;
             cursor: pointer;
         }
 
-        button:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        /* FILTER */
-        #hallFilter {
-            padding: 8px;
-            border-radius: 8px;
-            
-        }
-
-        /* CALENDAR */
         #calendar {
             flex: 1;
             background: white;
             padding: 10px;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
 
-        /* POPUP */
-        #popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 9999;
-        }
+      /* OVERLAY */
+#popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 
-        .popup-card {
-            background: white;
-            width: 320px;
-            padding: 20px;
-            margin: 100px auto;
-            border-radius: 10px;
-        }
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
 
-        .close-btn {
-            float: right;
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-        }
+    z-index: 9999;
+}
 
-        /* 📱 Responsive */
-        @media (max-width: 900px) {
-            body { overflow: auto; }
+/* CARD */
+.popup-card {
+    background: white;
+    width: 360px;
+    padding: 20px;
+    margin: 120px auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
 
-            .main-layout {
-                flex-direction: column;
-                height: auto;
-            }
+/* HEADER */
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
 
-            .left-panel {
-                width: 100%;
-            }
-        }
+/* TITLE */
+.popup-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.close-btn:hover {
+    background: #cc0000;
+}
+.delete-btn {
+    margin-top: 15px;
+    background: #dc3545;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.delete-btn:hover {
+    background: #b52a37;
+}
+/* FILTER CARD */
+.filter-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* LABEL */
+.filter-card label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+/* SELECT STYLE */
+#hallFilter {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    transition: 0.2s;
+}
+
+#hallFilter:focus {
+    border-color: #007bff;
+    outline: none;
+    background: white;
+}
     </style>
 </head>
 
@@ -151,11 +181,10 @@
 
 <div class="container">
 
-    <h2>kjgjvj</h2>
+    <h2>CARITAS HALL BOOKING</h2>
 
     <div class="main-layout">
 
-        <!-- LEFT -->
         <div class="left-panel">
 
             <div class="card">
@@ -188,17 +217,19 @@
                 <button onclick="bookHall()">Book Hall</button>
             </div>
 
-            <select id="hallFilter" onchange="reloadCalendar()">
-                <option value="ALL">All Halls</option>
-                <option>Diamond Jubilee Hall</option>
-                <option>Seminar Hall</option>
-                <option>CCI Conference Hall</option>
-                <option>Admin Conference Hall</option>
-            </select>
+            <div class="card filter-card">
+    <label>Filter by Hall</label>
+    <select id="hallFilter" onchange="reloadCalendar()">
+        <option value="ALL">All Halls</option>
+        <option>Diamond Jubilee Hall</option>
+        <option>Seminar Hall</option>
+        <option>CCI Conference Hall</option>
+        <option>Admin Conference Hall</option>
+    </select>
+</div>
 
         </div>
 
-        <!-- RIGHT -->
         <div class="right-panel">
             <div id="calendar"></div>
         </div>
@@ -209,8 +240,14 @@
 <!-- POPUP -->
 <div id="popup">
     <div class="popup-card">
-        <button class="close-btn" onclick="closePopup()">X</button>
+        
+        <div class="popup-header">
+            <h3>Booking Details</h3>
+            <button class="close-btn" onclick="closePopup()">✖</button>
+        </div>
+
         <div id="popupContent"></div>
+
     </div>
 </div>
 
@@ -247,6 +284,35 @@ function bookHall() {
     });
 }
 
+// 🔥 DELETE FUNCTION
+function deleteBooking(id) {
+    console.log("Deleting ID:", id); // debug
+
+    if (!confirm("Delete this booking?")) return;
+
+    fetch('/deleteBooking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data); // debug
+
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert("Deleted successfully");
+            closePopup();
+            calendar.refetchEvents();
+        }
+    })
+    .catch(err => {
+        console.error("Delete error:", err);
+        alert("Delete failed");
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
     calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -263,7 +329,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: `${b.hall} - ${b.user}`,
                     start: `${b.startDate}T${b.startTime}`,
                     end: `${b.endDate}T${b.endTime}`,
-                    extendedProps: b
+                    extendedProps: {
+                        ...b,
+                        id: b.id   // ✅ ID included
+                    }
                 })));
             })
             .catch(err => failureCallback(err));
@@ -275,12 +344,17 @@ document.addEventListener('DOMContentLoaded', function () {
             popup.style.display = "block";
             popupContent.innerHTML = `
                 <h3>Booking Details</h3>
+                <p><b>ID:</b> ${e.id}</p>
                 <p><b>Hall:</b> ${e.hall}</p>
                 <p><b>User:</b> ${e.user}</p>
                 <p><b>Start:</b> ${e.startDate} ${e.startTime}</p>
                 <p><b>End:</b> ${e.endDate} ${e.endTime}</p>
                 <p><b>Subject:</b> ${e.subject}</p>
                 <p><b>Mobile:</b> ${e.mobile}</p>
+
+                <button onclick="deleteBooking(${e.id})" class="delete-btn">
+    🗑 Delete Booking
+</button>
             `;
         }
     });

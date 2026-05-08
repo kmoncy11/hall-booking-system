@@ -126,7 +126,18 @@ app.post("/approve", (req, res) => {
 });
 
 
-// EMAIL
+// DELETE
+app.post("/deleteBooking", (req, res) => {
+    const { id } = req.body;
+
+    console.log("Delete request ID:", id); // debug
+
+    db.run(`DELETE FROM bookings WHERE id=?`, [id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.json({ success: true });
+    });
+});
 
 // START SERVER
 app.listen(3000, () => console.log("Server running on port 3000"));
