@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<script>
+function login() {
+    fetch('/login', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            username: user.value,
+            password: pass.value
+        })
+    }).then(res=>res.json()).then(data=>{
+        if(data.success){
+            if(data.role==='admin') location='admin.html';
+            else location='dashboard.html';
+        } else alert("Login failed");
+    });
+}
+</script>
+
+</body>
+</html>

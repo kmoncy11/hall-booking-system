@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CARITAS HALL BOOKING</title>
+
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #007bff;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden; /* 🚫 prevent scroll */
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        /* 🔥 MAIN LAYOUT */
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            height: 85vh;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FORM CARD */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        select, input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgb(61, 61, 210), #0056d2);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* FILTER */
+        #hallFilter {
+            padding: 8px;
+            border-radius: 8px;
+            
+        }
+
+        /* CALENDAR */
+        #calendar {
+            flex: 1;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        /* POPUP */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+        }
+
+        .popup-card {
+            background: white;
+            width: 320px;
+            padding: 20px;
+            margin: 100px auto;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            float: right;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        /* 📱 Responsive */
+        @media (max-width: 900px) {
+            body { overflow: auto; }
+
+            .main-layout {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .left-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2></h2>
+
+    <div class="main-layout">
+
+        <!-- LEFT -->
+        <div class="left-panel">
+
+            <div class="card">
+                <div class="row">
+                    <select id="hall">
+                        <option>Diamond Jubilee Hall</option>
+                        <option>Seminar Hall</option>
+                        <option>CCI Conference Hall</option>
+                        <option>Admin Conference Hall</option>
+                    </select>
+
+                    <input type="text" id="user" placeholder="Your Name">
+                </div>
+
+                <div class="row">
+                    <input type="date" id="startDate">
+                    <input type="time" id="startTime">
+                </div>
+
+                <div class="row">
+                    <input type="date" id="endDate">
+                    <input type="time" id="endTime">
+                </div>
+
+                <div class="row">
+                    <input type="text" id="subject" placeholder="Subject">
+                    <input type="number" id="mobile" placeholder="Mobile">
+                </div>
+
+                <button onclick="bookHall()">Book Hall</button>
+            </div>
+
+            <select id="hallFilter" onchange="reloadCalendar()">
+                <option value="ALL">All Halls</option>
+                <option>Diamond Jubilee Hall</option>
+                <option>Seminar Hall</option>
+                <option>CCI Conference Hall</option>
+                <option>Admin Conference Hall</option>
+            </select>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-panel">
+            <div id="calendar"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- POPUP -->
+<div id="popup">
+    <div class="popup-card">
+        <button class="close-btn" onclick="closePopup()">X</button>
+        <div id="popupContent"></div>
+    </div>
+</div>
+
+<script>
+let calendar;
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+
+function reloadCalendar() {
+    if (calendar) calendar.refetchEvents();
+}
+
+function bookHall() {
+    fetch('/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            hall: hall.value,
+            startDate: startDate.value,
+            startTime: startTime.value,
+            endDate: endDate.value,
+            endTime: endTime.value,
+            user: user.value,
+            subject: subject.value,
+            mobile: mobile.value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) alert(data.error);
+        else location.reload();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        initialView: 'dayGridMonth',
+        height: '100%',
+
+        events: function(fetchInfo, successCallback, failureCallback) {
+            const hall = document.getElementById("hallFilter").value;
+
+            fetch(`/bookings?hall=${encodeURIComponent(hall)}`)
+            .then(res => res.json())
+            .then(data => {
+                successCallback(data.map(b => ({
+                    title: `${b.hall} - ${b.user}`,
+                    start: `${b.startDate}T${b.startTime}`,
+                    end: `${b.endDate}T${b.endTime}`,
+                    extendedProps: b
+                })));
+            })
+            .catch(err => failureCallback(err));
+        },
+
+        eventClick: function(info) {
+            const e = info.event.extendedProps;
+
+            popup.style.display = "block";
+            popupContent.innerHTML = `
+                <h3>Booking Details</h3>
+                <p><b>Hall:</b> ${e.hall}</p>
+                <p><b>User:</b> ${e.user}</p>
+                <p><b>Start:</b> ${e.startDate} ${e.startTime}</p>
+                <p><b>End:</b> ${e.endDate} ${e.endTime}</p>
+                <p><b>Subject:</b> ${e.subject}</p>
+                <p><b>Mobile:</b> ${e.mobile}</p>
+            `;
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
+</body>
+</html>

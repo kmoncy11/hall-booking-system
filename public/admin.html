@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Admin Panel</h2>
+<div id="list"></div>
+
+<script>
+fetch('/bookings').then(r=>r.json()).then(data=>{
+    let html='';
+    data.forEach(b=>{
+        html+=`
+        <div>
+        ${b.hall} ${b.date} ${b.time} (${b.status})
+        <button onclick="update(${b.id},'APPROVED')">Approve</button>
+        <button onclick="update(${b.id},'REJECTED')">Reject</button>
+        </div>`;
+    });
+    list.innerHTML=html;
+});
+
+function update(id,status){
+    fetch('/approve',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id,status})
+    }).then(()=>location.reload());
+}
+</script>
+
+</body>
+</html>
