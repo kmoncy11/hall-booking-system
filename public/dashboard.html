@@ -211,7 +211,7 @@
 
                 <div class="row">
                     <input type="text" id="subject" placeholder="Subject">
-                    <input type="number" id="mobile" placeholder="Mobile">
+                    <input type="tel" id="mobile" placeholder="Mobile (10 digits)" maxlength="10">
                 </div>
 
                 <button onclick="bookHall()">Book Hall</button>
@@ -254,6 +254,7 @@
 <script>
 let calendar;
 
+
 function closePopup() {
     document.getElementById("popup").style.display = "none";
 }
@@ -263,6 +264,16 @@ function reloadCalendar() {
 }
 
 function bookHall() {
+
+    const mobile = document.getElementById("mobile").value;
+
+    // 📱 Validate mobile
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(mobile)) {
+        alert("Enter valid mobile number");
+        return;
+    }
+
     fetch('/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -274,7 +285,7 @@ function bookHall() {
             endTime: endTime.value,
             user: user.value,
             subject: subject.value,
-            mobile: mobile.value
+            mobile: mobile
         })
     })
     .then(res => res.json())
@@ -312,8 +323,11 @@ function deleteBooking(id) {
         alert("Delete failed");
     });
 }
-
-document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("startDate").setAttribute("min", today);
+        document.getElementById("endDate").setAttribute("min", today);
+       
 
     calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         initialView: 'dayGridMonth',
